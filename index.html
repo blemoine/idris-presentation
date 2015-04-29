@@ -14,7 +14,7 @@
 
 		<link rel="stylesheet" href="css/reveal.css">
 		
-		<link rel="stylesheet" type="text/css" href="css/theme/devoxx.css" id="theme">
+		<link rel="stylesheet" type="text/css" href="css/theme/league.css" id="theme">
 		
 
 		<!-- Code syntax highlighting -->
@@ -46,19 +46,68 @@
 
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
-				<section data-background="images/devoxxBG.png" class="first-slide">
-					<h1>Idris</h1>
-					</div>
+				<section class="first-slide">
+					<h1>Introduction à Idris</h1>
+					<!-- LOGO -->
 				</section>
 
+				<section>
+				<h2>Qui suis je ?</h2>
+				<ul>
+					<li>Benoit Lemoine</li>
+					<li>Développeur fullstack</li>
+					<li>@benoit_lemoine</li>
+					<li>n00b en Haskell et en Idris</li>
+				</ul>
+				</section>
 
 				<section>
-					<h2>Questions&nbsp;?</h2>
+				<h2>Idris, en quelques mots</h2>
+				<ul>
+					<li>Langage (presque) purement fonctionnel</li>
+					<li>Typage dépendant</li>
+					<li>Fortement inspiré de Haskell</li>
+					<li>Peut servir d'assistant de preuve</li>
+				</ul>
+				</section>
+
+				<section>
+				<h2>Comment tester Idris ?</h1>
+				<pre><code data-trim>
+cabal install idris
+				</code></pre>
+				</section>
+			
+				<section>
+				<h2>Un exemple simple</h2>
+				 <pre><code data-trim>
+module Main
+
+main : IO()
+main = putStrln "Hello World!"
+				</code></pre>
+				</section>
+
+				<section>
+				<h2>Un exemple moins simple</h2>
+				 <pre><code data-trim>
+-- extrait du Prelude
+index : Fin n -> Vect n a -> a
+index FZ     (x::xs) = x
+index (FS k) (x::xs) = index k xs
+
+
+index 2 [1,2,3,4] -- compile et renvoie 3
+index 4 [1,2,3,4] -- ne compile pas
+				</code></pre>
+				</section>
+
+				<section>
+					<h2>Live Code</h2>
 				</section>
 	
 			</div>
 
-			<div class="footer"><span class="hashtag">#typescriptDevoxx</span><span class="twitter">@benoit_lemoine</span></div>
 		</div>
 
 		<script src="lib/js/head.min.js"></script>
