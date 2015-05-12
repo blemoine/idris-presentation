@@ -91,6 +91,17 @@ main = putStrln "Hello World!"
 				</section>
 
 				<section>
+					<h2>Les entiers naturels</h2>
+<pre><code data-trim class="Haskell">
+data Nat = Z | S Nat
+
+plus : Nat -> Nat -> Nat
+plus Z y = y
+plus (S k) y = S (plus k y)
+</code></pre>
+				</section>
+
+				<section>
 				<h2>Un exemple moins simple</h2>
 				 <pre><code data-trim class="Haskell">
 -- extrait du Prelude
