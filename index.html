@@ -102,13 +102,18 @@ plus (S k) y = S (plus k y)
 				</section>
 
 				<section>
-				<h2>Un exemple moins simple</h2>
+				<h2>Les vecteurs</h2>
 				 <pre><code data-trim class="Haskell">
--- extrait du Prelude
-index : Fin n -> Vect n a -> a
-index FZ     (x::xs) = x
-index (FS k) (x::xs) = index k xs
+data Vect : Nat -> Type -> Type where
+  Nil  : Vect Z a
+  (::) : (x : a) -> (xs : Vect n a) -> Vect (S n) a
 
+head : Vect (S n) a -> a
+head (x::xs) = x
+
+(++) : Vect m a -> Vect n a -> Vect (m + n) a
+(++) []      ys = ys
+(++) (x::xs) ys = x :: xs ++ ys
 
 index 2 [1,2,3,4] -- compile et renvoie 3
 index 4 [1,2,3,4] -- ne compile pas

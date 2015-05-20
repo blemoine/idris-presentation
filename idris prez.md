@@ -40,7 +40,7 @@ main = do
 ```
 
    * comment construire un type à partir d'une fonction
-   * montrer le `where`
+   * montrer le ```where```
    * montrer que si je ne met pas les bonnes dimensions pour ma matric ca compile pas
  
 
@@ -52,17 +52,20 @@ add: (Num a) => Matrix n m a -> Matrix n m a -> Matrix n m a
 ```
 
 \d
+
 ```
 add x x1 = ?add_rhs
 ```
 
 \c \c \c \c
+
 ```
 add [] [] = ?add_rhs_2
 add (x :: xs) (y :: ys) = ?add_rhs_1
 ```
 
 \o
+
 ```
 add [] [] = []
 add (x :: xs) (y :: ys) = ?add_rhs_1
