@@ -66,6 +66,7 @@
 				<ul>
 					<li class="fragment">Langage (presque) purement fonctionnel</li>
 					<li class="fragment">Fortement inspiré de Haskell</li>
+					<li class="fragment">Evaluation immédiate</li>
 					<li class="fragment">Typage dépendant</li>
 					<li class="fragment">Peut servir d'assistant de preuve</li>
 					<li class="fragment">Compile vers Natif ou JS</li>
@@ -82,7 +83,7 @@ cabal install idris
 			
 				<section>
 				<h2>Un exemple simple</h2>
-				 <pre><code data-trim class="Haskell">
+				 <pre><code data-trim class="hs">
 module Main
 
 main : IO()
@@ -92,7 +93,7 @@ main = putStrln "Hello World!"
 
 				<section>
 					<h2>Les entiers naturels</h2>
-<pre><code data-trim class="Haskell">
+<pre><code data-trim class="hs">
 data Nat = Z | S Nat
 
 plus : Nat -> Nat -> Nat
@@ -103,7 +104,7 @@ plus (S k) y = S (plus k y)
 
 				<section>
 				<h2>Les vecteurs</h2>
-				 <pre><code data-trim class="Haskell">
+				 <pre><code data-trim class="hs">
 data Vect : Nat -> Type -> Type where
   Nil  : Vect Z a
   (::) : (x : a) -> (xs : Vect n a) -> Vect (S n) a
