@@ -1,3 +1,3 @@
-Présentation de TypeScript
-================
+Présentation de Idris 
+=====================
 
