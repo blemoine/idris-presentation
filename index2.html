@@ -1,0 +1,849 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Idris</title>
+
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		
+		<link rel="stylesheet" type="text/css" href="css/theme/league.css" id="theme">
+		
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/solarized_light.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+
+		<style>
+		pre.small-code {
+			font-size:0.36em;
+		}
+		.letter1 {
+      
+      animation:colorchange 15s infinite alternate;
+      animation-delay: -3s;
+    }
+    .letter2 {
+
+      animation:colorchange 15s infinite alternate;
+      animation-delay: -6s;
+    }
+    .letter3 {
+
+
+      animation:colorchange 15s infinite alternate;
+      animation-delay: -9s;
+    }
+    .letter4 {
+
+      animation:colorchange 15s infinite alternate;
+      animation-delay: -12s;
+    }
+    .letter5 {
+
+      animation:colorchange 15s infinite alternate;
+      animation-delay: -15s;
+    }
+
+     @-webkit-keyframes colorchange {
+      0% {
+
+        color: blue;
+      }
+
+      10% {
+
+        color: #8e44ad;
+      }
+
+      20% {
+
+        color: #1abc9c;
+      }
+
+      30% {
+
+        color: #d35400;
+      }
+
+      40% {
+
+        color: blue;
+      }
+
+      50% {
+
+        color: #34495e;
+      }
+
+      60% {
+
+        color: blue;
+      }
+
+      70% {
+
+        color: #2980b9;
+      }
+      80% {
+
+        color: #f1c40f;
+      }
+
+      90% {
+
+        color: #2980b9;
+      }
+
+      100% {
+
+        color: pink;
+      }
+    }
+
+    code.inline {
+    	background: #333;
+    }
+		</style>
+	</head>
+
+	<body>
+
+		<div class="reveal convex center">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				
+
+				<!-- TRY1 -->
+				<section class="first-slide">
+					<h1>Les types dépendants</h1>
+					<h2 class="fragment">Special Guest: 
+						<span class="letter1">I</span><span class="letter2">d</span><span class="letter3">r</span><span class="letter4">i</span><span class="letter5">s</span>
+					</h2>
+				</section>
+
+				
+				<section>
+					<h2>Idris, en quelques mots</h2>
+					<ul>
+						<li class="fragment">Langage (presque) purement fonctionnel</li>
+						<li class="fragment">Syntaxe dérivée de Haskell</li>					
+						<li class="fragment">Typage dépendant</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>Qu'est ce qu'un type ?</h2>
+					<ul>
+						<li class="fragment">Indique l'ensemble des valeurs possibles pour un terme <br/>(<code class="inline">x: Bool</code> implique que <code class="inline">x = True</code> ou <code class="inline">x = False</code></li>
+						<li class="fragment">Limite l'ensemble des opérations applicables à un terme </li>
+						<li class="fragment">Peut définir la façon dont est stockée la donnée en mémoire (un Bool prend 1 bit, un int32 prend 32 bit, etc.) </li>
+					</ul>	
+				</section>	
+
+				<section>
+				<h2>Lambda cube</h2>
+				<div style="text-align: center">
+					<img src="images/lambdacube.png" style="width:220px; background:white"/>
+				</div>
+				<ul>
+					<li class="fragment">λ→	: types simples : <code class="inline">String</code> ou <code class="inline">Int</code></li>
+					<li class="fragment">λ2 : un terme depend d'un type, aka polymorphisme <code class="inline">def id[A](a: A): A</code> ou <code class="inline">id: a -> a</code></li>
+					<li class="fragment">λω : un type dépend d'une type, aka générique <code class="inline">List[A]</code> ou <code class="inline">List a</code></li>
+					<li class="fragment">λP : un type dépend d'un terme <code class="inline">Vect n a</code></li>
+				</ul>				
+				
+				</section>
+
+				<section>
+					<h2>Syntaxe</h2>
+					<pre  class="fragment"><code data-trim class="haskell">
+isOne: Integer -> Bool
+isOne 1 = True
+isOne _ = False
+					</code></pre>
+					<pre class="fragment"><code  data-trim class="haskell">
+add: Integer -> Integer -> Integer
+add x y = x + y
+					</code></pre>
+
+					<pre class="fragment"><code  data-trim class="haskell">
+let i = add 1 2  -- egal a 3
+let j = add (add 1 2) 4  -- egal a 7
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Quizz</h2>
+					<p>Quel est le type de ?</p>
+					<ul>
+						<li>3  <span class="fragment"><code  class="inline">Integer</code></span></li>
+						<li class="fragment">[1,2,3]  <span class="fragment"><code  class="inline">List Integer</code></span></li>
+						<li class="fragment">||  <span class="fragment"><code  class="inline">Bool -> Bool -> Bool</code></span></li>
+						<li class="fragment">find  <span class="fragment"><code  class="inline">(a -> Bool) -> List a -> Maybe a</code></span></li>
+						
+						<li class="fragment">Integer  <span class="fragment"><code  class="inline">Type</code></li>
+						<li class="fragment">List  <span class="fragment"><code  class="inline">Type -> Type</code></li>
+						<li class="fragment">Either  <span class="fragment"><code  class="inline">Type -> Type -> Type</code></li>
+						<li class="fragment">Vect  <span class="fragment"><code  class="inline">Nat -> Type -> Type</code></li>
+					</ul>	
+					<!-- ~/sbt/bin/sbt console -->
+				</section>	
+
+				<section>
+					<h2>Syntaxe</h2>
+					<pre><code  data-trim class="haskell">
+data Trilean = MyTrue | MyFalse | Error String
+data Option a = Some a | None						
+					</code></pre>
+					<pre class="fragment"><code  data-trim class="haskell">
+data Trilean: Type where
+	MyTrue: Trilean
+	MyFalse: Trilean
+	Error: String -> Trilean
+
+data Option: Type -> Type where
+	Some: a -> Option a
+	None: Option a
+
+					</code></pre>
+				</section>	
+
+				<section>
+					<h2>autre exemple de type dépendant</h2>
+
+<pre><code  data-trim class="haskell">
+data EventType = GetId | GetName
+
+handleType: EventType -> Type
+handleType GetId = Integer
+handleType GetName = String
+
+
+handle: (e:EventType) -> handleType e
+handle GetId = 1
+handle GetName = "Georges"
+					</code></pre>
+				</section>
+
+				<section>
+					<h2>Comment <code>Vect</code> fonctionne?</h2>
+				</section>		
+
+
+				<section>
+					<h2>Entier naturels</h2>				
+
+					<pre class="fragment"><code data-trim class="haskell">
+data Nat = Z | S Nat
+
+let two = S (S Z)
+let three = S two		
+
+add : Nat -> Nat -> Nat
+add Z right        = right
+add (S left) right = S (add left right)				
+					</code></pre>	
+				</section>	
+
+				<section>
+					<h2>Vect</h2>
+
+<pre class="fragment"><code data-trim class="haskell">
+data Vect: Nat -> Type -> Type where
+   Nil: Vect Z a
+   (::): (x: a) -> (xs: Vect n a) -> Vect (S n) a	
+
+let a: Vect 3 Int = 1 :: 2 :: 3 :: Nil   
+</code></pre>	
+				</section>	
+
+				<section>
+					<h2>Operation: head</h2>
+
+<pre class="fragment"><code data-trim class="haskell">
+total
+head: Vect (S n) a -> a	
+head (x :: _) = x
+</code></pre>								
+				</section>	
+
+				<section>
+					<h2>Operation: concat</h2>
+
+<pre><code data-trim class="haskell">
+concat: Vect n a -> Vect m a -> Vect (n + m) a
+concat []      ys = ys
+concat (x::xs) ys = x :: (concat xs ys)
+</code></pre>
+				
+				</section>	
+
+
+				<section>
+					<h2>Génération de code</h2>
+<pre><code data-trim class="haskell">
+id: a -> a
+id x = ?putSomethingHere
+</code></pre>	
+				</section>	
+
+				<section>
+					<h2>Exemple</h2>
+<pre><code data-trim class="haskell">
+map: (a -> b) -> Vect n a -> Vect n b
+</code></pre>
+				</section>
+
+				<section>
+					<h2>Pour aller plus loin</h2>
+				</section>	
+
+				<section>
+					<h2>La logique intuistioniste</h2>
+					<ul>
+						<li>Quelque chose est vrai si et seulement si on peut construire une preuve</li>
+						<li class="fragment">On en peut donc pas prouver quelque chose disant que son opposé est non vrai! ie: pas de tiers-exclu</li>
+					</ul>	
+				</section>	
+
+				<section style="font-size: 0.93em">
+					<h2>Curry Howard</h2>
+					<ul>
+						<li>un Type est une assertion (<code class="inline">Integer</code> ~ "Ǝ x:Integer")</li>
+						<li class="fragment">une valeur de type <em>A</em> est une preuve de <em>A</em> <br /> (<code class="inline">3</code> est une preuve de <code class="inline">Integer</code>)</li>
+						<li class="fragment">une fonction générique sur un type <em>A</em> est un quantifier universel <br />(<code class="inline">a -> List a</code> ~ ∀ <em>x: a</em>, Ǝ <em>y: list a</em>)</li>
+						<!--<li class="fragment">une paire dépendante est un quantifieur existentiel <br />( <code class="inline">((n: Nat) ** Vect n String)</code> Ǝ <em>n: Nat</em> tel qu'un <em>Vect n String</em> existe)</li>-->
+						<li class="fragment">Type produit est une conjonction <br /><code class="inline">data User = MkUser Name Age</code> User = Name AND Age </li>
+						<li class="fragment">Type somme est une disjunction <br /><code class="inline">data Shape = Rect | Circle</code> Shape = Rect OR Shape </li>						
+					</ul>					
+				</section>	
+
+				<section>
+					<h2>La notion de preuve</h2>
+<pre><code data-trim class="haskell">
+head: Vect (S n) a -> a 
+-- head : {n : Nat} -> {a : Type} -> Vect (S n) a -> a 
+</code></pre>	
+<pre class="fragment"><code data-trim class="haskell">
+-- Forall n: Nat and  a: Type
+-- if there exists a Vect (S n) a then there exists an a.
+</code></pre>	
+<pre class="fragment"><code data-trim class="haskell">
+head: List a -> a 
+head [] = ?hd_rhs_2 -- impossible
+head (x :: xs) = x
+</code></pre>	
+<pre class="fragment"><code data-trim class="haskell">
+head: (l: List a) -> {auto ok : NonEmpty l} -> a 
+-- Forall a: Type  if l: List a and 
+-- l is NonEmpty, then there exists an a.
+
+data NonEmpty : (xs : List a) -> Type where
+   IsNonEmpty : NonEmpty (x :: xs)
+</code></pre>	
+				</section>	
+
+				<section>
+					<h2>Assistant de preuve</h2>
+					<pre><code data-trim class="haskell">
+data (=) : a -> b -> Type where
+   Refl : x = x
+
+zeroIsNeutral: (n: Nat) -> n + 0 = n
+zeroIsNeutral Z = Refl
+zeroIsNeutral (S k) = let inductiveHypothesis = zeroIsNeutral k in 
+                        rewrite inductiveHypothesis in Refl
+					</code></pre>	
+				</section>	
+
+				<section>
+					<h2>Conclusion</h2>
+					<ul>
+						<li class="fragment">Plusieurs types de logiques</li>
+						<li class="fragment">Equivalence entre logique et systeme de type</li>
+						<li class="fragment">Type dépendant-ish commencent a apparaitre dans les langages mainstream</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>En Scala</h2>
+					<pre ><code data-trim class="scala">
+sealed trait Nat extends Product with Serializable
+case object Z extends Nat
+type Z = Z.type
+case class Succ[N &lt;: Nat](n: N) extends Nat
+
+val two = Succ(Succ(Z));
+					</code></pre>
+
+<pre><code data-trim class="scala">
+sealed trait Vect[+A, N  <: Nat] extends Serializable with Product {
+    def ::[B >: A](head: B): Vect[B, Succ[N]] = Cons(head, this)
+}
+case object Nil extends Vect[Nothing, Z]
+case class Cons[A, N <: Nat](head: A, tail: Vect[A, N]) 
+                extends Vect[A, Succ[N]];
+
+
+val a: Vect[Int, Succ[Succ[Z]]] = 1 :: 2 :: Nil
+</code></pre>
+
+<pre><code data-trim class="scala">
+def head[A, N  <: Nat](a: Vect[A, Succ[N]]): A = a match {
+    case Cons(head, _) => head
+}
+</code></pre>
+
+				</section>	
+				<section>
+					<h2>En Scala</h2>
+
+<pre><code data-trim class="scala">
+trait Sum[A &lt;: Nat, B &lt;: Nat] extends Serializable { type Out &lt;: Nat }
+object Sum {
+  def apply[A &lt;: Nat, B &lt;: Nat](implicit sum: Sum[A, B]
+    ): Aux[A, B, sum.Out] = sum
+
+  type Aux[A &lt;: Nat, B &lt;: Nat, C &lt;: Nat] = Sum[A, B] { type Out = C }
+
+  implicit def sum1[B &lt;: Nat]: Aux[_0, B, B] = new Sum[_0, B] { 
+    type Out = B 
+  }
+  implicit def sum2[A &lt;: Nat, B &lt;: Nat, C &lt;: Nat]
+   (implicit sum : Sum.Aux[A, Succ[B], C]): Aux[Succ[A], B, C] = 
+     new Sum[Succ[A], B] { type Out = C }
+}	
+
+def concat[A, N &lt;: Nat, M &lt;: Nat](a: Vect[A, N], b: Vect[A, M])(
+  implicit sum: Sum[N, M]): Vect[A, sum.Out] = ???
+</code></pre>
+				</section>	
+
+
+
+
+				<!-- END TRY1 -->
+<!--
+				<section>
+				<h2>Idris, en quelques mots</h2>
+				<ul>
+					<li class="fragment">Langage (presque) purement fonctionnel</li>
+					<li class="fragment">Fortement inspiré de Haskell</li>
+					<li class="fragment">Évaluation immédiate</li>
+					<li class="fragment">Typage dépendant</li>
+					<li class="fragment">Peut servir d'assistant de preuve</li>
+					<li class="fragment">Compile vers Natif ou JS...</li>
+					<li class="fragment">... ou PHP</li>					
+				</ul>
+				</section>
+
+				<section>
+					<h2>La syntaxe Haskell</h2>
+					<ul>
+						<li>Syntaxe de Idris, Haskell, PureScript, Elm, Agda, etc.</li>
+						<li>Syntaxe très proche des mathématiques (lambda calcul)</li>
+						<li>Pas d'effets de bord, tout est immutable</li>
+					</ul>	
+				</section>	
+
+				<section>
+					<h2>Définir un type</h2>
+					<pre><code data-trim class="haskell">
+data Point = MkPoint Double Double
+data Shape = Circle Point Double | Rectangle Point Point
+					</code></pre>	
+					
+					<pre><code data-trim class="scala">
+// Equivalent scala						
+case class Point(x: Double, y: Double)
+sealed trait Shape extends Serializable with Product
+case class Circle(center: Point, radius: Double) extends Shape
+case class Rectangle(topLeft: Point, bottomRight: Point) extends Shape						
+					</code></pre>	
+				</section>	
+
+				<section>
+					<h2>Déclarer une fonction</h2>
+					<pre><code data-trim class="haskell">
+area: Shape -> Double
+area (Circle _ radius) = radius * radius * 3.14
+area (Rectangle (MkPoint x1 y1) (MkPoint x2 y2)) = (x2 - x1) * (y2 - y1)  						
+					</code></pre>	
+					<pre><code data-trim class="scala">
+// Equivalent scala						
+def area(shape: Shape): Float = shape match {
+  case Circle(_, radius) => radius * radius * 3.14
+  case Rectangle(Point(x1, y1), Point(x2, y2)) => (x2 - x1) * (y2 - y1)
+}						
+					</code></pre>		
+				</section>	
+
+				<section>
+					<h2>Appliquer une fonction</h2>
+					<pre><code data-trim class="haskell">
+add: Int -> Int -> Int
+add x y = x + y
+
+mul: Int -> Int -> Int
+mul x y = x * y
+</code></pre>	
+<pre class="fragment"><code data-trim class="haskell">
+
+compute1: Int
+compute1 = add 1 2
+</code></pre>	
+<pre class="fragment"><code data-trim class="haskell">
+
+
+compute2: Int
+-- 1 + 2 * (3 + 4)
+compute2 = add 1 (mul 2 (add 3 4))  
+					</code></pre>	
+				</section>
+
+				<section>
+					<h2>Les types génériques</h2>
+<pre><code data-trim class="haskell">					
+id: a -> a
+id x = x
+
+concat: List a -> List a -> List a
+concat (x::xs) ys = x :: concat xs ys
+concat nil ys = ys
+
+</pre></code>					
+				</section>	
+
+
+				<section>
+					<h2>Type Classes</h2>
+					<pre><code data-trim class="haskell">	
+sum': (Num a) => List a -> a
+sum' (x :: xs) = x + sum'(xs)
+sum' Nil = 0
+
+result: Integer
+result = sum' [1,2,3] -- 6
+</code></pre>	
+<pre class="fragment"><code data-trim class="haskell">	
+sum'': (Monoid a) => List a -> a
+sum'' (x :: xs) = x &lt;+> sum''(xs)
+sum'' Nil = neutral  
+
+result: String
+result = sum'' ["a","bc","de"] -- "abcde"
+
+result': Double
+result' = sum'' [1.0, 2.0, 3.0] -- 6
+
+					</code></pre>	
+				</section>	
+
+				<section>
+					<h2>Type System</h2>					
+				</section>
+
+				<section>
+					<h2>Kind</h2>
+					<p>Quel est le type de&nbsp;?</p>
+					<ul>
+						<li> 3  <code  class="fragment" style="background:#333;margin-left:30px">Integer</code></li>
+						<li  class="fragment"> id <code class="fragment" style="background:#333;margin-left:30px">a -> a</code></li>						
+						<li  class="fragment">  Integer <code class="fragment" style="background:#333;margin-left:30px">Type</code></li>
+						<li  class="fragment">  List <code class="fragment" style="background:#333;margin-left:30px">Type -> Type</code></li>
+						<li  class="fragment">  Either <code class="fragment" style="background:#333;margin-left:30px">Type -> Type -> Type</code></li>
+						<li  class="fragment">  Type <code class="fragment" style="background:#333;margin-left:30px">Type1</code></li>
+					</ul>			
+				</section>	
+
+				<section>
+					<ul>
+						<li>Integer: un type</li>
+						<li>a -> a: valeur dépendant d'un type</li>
+						<li>List a : un type dépendant d'un type</li>
+						<li class="fragment">What if un type dépendant d'une valeur?</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>Peano Natural Number</h2>
+					<pre><code data-trim class="haskell">	
+data Nat = Z | S Nat
+
+
+Z
+-- 0: Nat
+S Z
+-- 1: Nat
+S (S (S Z))
+-- 3: Nat
+S 4
+-- 5: Nat
+					</code></pre>
+				</section>	
+
+				<section>
+					<h2>List</h2>
+<pre><code data-trim class="haskell">	
+data List a = Nil | (::) a (List a)	
+</code></pre>	
+<pre><code data-trim class="haskell">	
+data List: Type -> Type where
+   Nil: List a
+   (::): (x: a) -> (xs: List a) -> List a
+</code></pre>	
+<pre><code data-trim class="haskell">	
+ 1 :: 2 :: Nil
+ -- [1, 2] : List Integer	
+</code></pre>	
+				</section>	
+
+				<section>
+					<h2>Vect</h2>
+<pre><code data-trim class="haskell">	
+data Vect: Nat -> Type -> Type where
+   Nil: Vect Z a
+   (::): (x: a) -> (xs: Vect n a) -> List (S n) a
+</code></pre>	
+<pre><code data-trim class="haskell">	
+ 1 :: 2 :: Vect.Nil
+ -- [1, 2] : Vect 2 Integer	
+
+ 1 :: 2 :: 3 :: 4 Vect.Nil
+ -- [1, 2, 3, 4] : Vect 4 Integer	
+</code></pre>	
+				</section>
+
+				<section>
+					<pre><code data-trim class="haskell">	
+head': Vect (S n) a -> a
+head' a :: b = a					
+
+</code></pre>	
+<pre><code data-trim class="haskell">	
+myhead (1:: Nil)
+-- 1 : Integer
+myhead Nil
+{- Type mismatch between
+                Vect 0 a (Type of [])
+        and
+                Vect (S n) iType (Expected type)
+        
+        Specifically:
+                Type mismatch between
+                        0
+                and
+                        S n
+-}
+</code></pre>	
+				</section>	
+								<section>
+									<pre><code data-trim class="haskell">	
+concat': Vect n a -> Vect m a -> Vect (n + m) a
+concat' (x::xs) ys = x :: concat' xs ys
+concat' nil ys = ys										
+									</code>	</pre>
+									<pre><code data-trim class="haskell">	
+concat' (1::Nil) (2::3::Nil)
+-- [1, 2, 3] : Vect 3 Integer										
+									</code>	</pre>
+								</section>
+
+								<section>
+									<pre><code data-trim class="haskell">
+map': (a -> b) -> Vect n a -> Vect n b
+-- generate an initial pattern match under
+-- generate a case split
+-- attempt to fill out the hole
+
+map': (a -> b) -> Vect n a -> Vect n b
+map' f [] = []
+map' f (x :: xs) = f x :: map' f xs
+									</code></pre>	
+								</section>
+
+								<section>
+									<pre><code data-trim class="haskell">
+filter': (a -> Bool) -> Vect n a -> (m ** Vect m a)
+filter' f [] = (0 ** [])
+filter' f (x :: xs) = case (filter' f xs) of
+     (n ** tail) => if f x then ( (S n) ** (x :: tail ) ) else (n ** tail)
+									</code></pre>	
+<pre><code data-trim class="haskell">	
+Main.filter' (\x => x > 3) (1::2::3::4::5::Nil)
+(2 ** [4, 5]) : (m : Nat ** Vect m Integer)					
+									</code>	</pre>
+
+								</section>	
+
+								<section>
+									<h2>Curry Howard</h2>
+									<ul>
+										<li>Un type est une assertion logique</li>
+										<li>Une valeur est une preuve de cette assertion<li>
+										<li>Les fonctions sont des implications logiques</li>
+										<li>Les type produit et somme sont des conjunctions et des disjunctions</li>
+										<li>Les produits dépendant sont des quantificateurs universels</li>
+										<li>Les sommes dépendantes sont des quantificateurs existentiels</li>
+									</ul>
+								</section>	
+
+								<section>
+									<h2>Curry Howard</h2>
+									3 est une preuve de Integer 
+									add: Integer -> Integer -> Integer
+									add x y = x + y
+
+									Quelque soit 2 Integer, il existe 1 Integer 
+
+									data NonEmpty : (xs : List a) -> Type where
+									    ||| The proof that a cons cell is non-empty
+									    IsNonEmpty : NonEmpty (x :: xs)
+
+									head: (l: List a) -> {auto ev : NonEmpty l} ->a
+									head []      {ev=IsNonEmpty} impossible
+									head (x::xs) {ev=p}    = x
+
+								</section>	
+
+
+
+								<section>
+									<h2>Preuve</h2>
+lengthCorrect: (n: Nat) -> (v: Vect n a) -> length v = n
+lengthCorrect Z [] = Refl									
+lengthCorrect (S k) (x :: xs) = rewrite lengthCorrect k xs in Refl
+								</section>	
+
+
+
+<!--				
+			
+				<section>
+				<h2>Un exemple simple</h2>
+				 <pre><code data-trim class="hs">
+module Main
+
+main : IO()
+main = putStrln "Hello World!"
+				</code></pre>
+				</section>
+
+
+
+data Nat = Z | S Nat
+
+
+				<section>
+					<h2>Les entiers naturels</h2>
+<pre><code data-trim class="hs">
+data Nat = Z | S Nat
+
+plus : Nat -> Nat -> Nat
+plus Z y = y
+plus (S k) y = S (plus k y)
+</code></pre>
+				</section>
+
+				<section>
+				<h2>Les vecteurs</h2>
+				 <pre><code data-trim class="hs">
+data Vect : Nat -> Type -> Type where
+  Nil  : Vect Z a
+  (::) : (x : a) -> (xs : Vect n a) -> Vect (S n) a
+
+head : Vect (S n) a -> a
+head (x::xs) = x
+
+(++) : Vect m a -> Vect n a -> Vect (m + n) a
+(++) []      ys = ys
+(++) (x::xs) ys = x :: xs ++ ys
+
+index 2 [1,2,3,4] -- compile et renvoie 3
+index 4 [1,2,3,4] -- ne compile pas
+				</code></pre>
+				</section>
+
+				<section>
+					<h2>Live Code</h2>
+				</section>
+
+				<section>
+					<h2>Conclusion</h2>
+					<ul>
+						<li class="fragment">Erreurs cryptiques</li>
+						<li class="fragment">Complexe d'utilisation</li>
+						<li class="fragment">Lent</li>
+						<li class="fragment" style="font-size:3em">mais fun !</li>
+					</ul>
+				</section>
+				-->
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+		
+		Reveal.addEventListener( 'slidechanged', function( event ) {
+			if(event.indexh == 0) {
+				document.querySelector('.reveal').classList.add('slide0');
+			} else {
+				document.querySelector('.reveal').classList.remove('slide0');
+			}
+		    
+		} );
+
+
+		if(Reveal.getState().indexh == 0) {
+			document.querySelector('.reveal').classList.add('slide0');
+		}
+
+		</script>
+
+	</body>
+</html>
